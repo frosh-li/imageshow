@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	  <title>image search</title>
+	  <script src='/js/jquery.js' type='text/javascript' charset='utf-8'></script>
+	  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<input type="text" id="search" value="news.qq.com" />
+<input type="text" id="query" value="图片" />
+<input type="button" id="submit" value="click to search" />
+<div id="main" class="clearfix">
+	<div class="col" id="col1">
+	</div>
+	<div class="col" id="col2">
+	</div>
+	<div class="col" id="col3">
+	</div>
+</div>
+<script>
+var url = "";
+function readjson(json){
+	console.log(json);
+	var currentPageObj = json.responseData.results;
+	if(currentPageObj.length == 0){
+		return;
+	}
+	for(var i = 0 ; i<currentPageObj.length ; i++){
+		var c = currentPageObj[i];
+		var tag = $('<div class="picshow"><img src="'+c.url+'" width="'+(parseInt(c.width) > 310 ? 310 : c.width)+'" /\><p>'+c.contentNoFormatting+'</p></div>');
+		var arr = [$("#col1").innerHeight(),$("#col2").innerHeight(),$("#col3").innerHeight()];
+		var currentMinIndex = 0;
+		for(var j = 0 ; j < arr.length-1 ; j++){
+			if(arr[j+1] < arr[j]){
+				currentMinIndex = j+1;
+			}
+		}
+		switch(currentMinIndex){
+			case 0:tag.appendTo($("#col1"));break;
+			case 1:tag.appendTo($("#col2"));break;
+			case 2:tag.appendTo($("#col3"));break;
+		}
+		console.log(tag);
+	}
+	var currentPageIndex = json.responseData.cursor.currentPageIndex;
+	if(currentPageIndex < json.responseData.cursor.pages.length){
+		getImageList(url,json.responseData.cursor.pages[currentPageIndex+1]["start"]);
+	}
+}
+function getImageList(turl,currentStart){
+	currentStart = currentStart || 0;
+	$.ajax({
+		url: turl+"&start="+currentStart,
+		type: 'GET',
+		dataType: 'jsonp',
+		timeout: 1000
+	});
+}
+$("#submit").click(function(){
+	$("#col1").html("");
+	$("#col2").html("");
+	$("#col3").html("");
+	var site = $("#search").val();
+	var query = $("#query").val();
+	url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&imgsz=large&callback=readjson";//&q=coupon&as_sitesearch=www.sharkcoupons.com
+	url += "&as_sitesearch="+site;
+	url += "&q="+query;
+	getImageList(url,0);
+});
+</script>
+</body>
+</html>
