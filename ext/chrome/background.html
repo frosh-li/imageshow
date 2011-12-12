@@ -1,0 +1,22 @@
+<html>
+<head>
+<script>
+  // Called when the user clicks on the browser action.
+  
+
+  chrome.tabs.executeScript(null,
+      {code:"document.body.style.backgroundColor='red'"});
+    
+  var i = 0;
+  window.setInterval(function() {
+    //console.log("heelo");
+    chrome.browserAction.setBadgeBackgroundColor({color:[0, 200, 0, 100]});
+    //chrome.browserAction.setBadgeText({text:String(i)});
+    i++;
+  }, 100);
+  window.onload = function(){
+    alert(333);
+  };
+</script>
+</head>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "my browser ext--frosh",
+  "version": "1.0",
+  "permissions": [
+    "tabs", "http://*/*"
+  ],
+  "content_scripts":[{
+    "matches":["http://*/*"],
+    "js":["text.js"],
+    "run_at":"document_end"
+    }
+  ]
+}
