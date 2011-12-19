@@ -1,0 +1,29 @@
+数据库设计
+1.用户表字段
+    _id
+    username
+    password
+    
+2.缓存图片字段
+    _id
+    src
+    title
+    userid
+3.系统分类设计
+    _id
+    name    分类名称        
+    
+4.分类
+    _id
+    name    相册名称
+    private 是否公开
+    userid  所属用户
+
+5.系统图片库
+    _id
+    src         图片地址
+    thumbnail   图片缩略图地址
+    width       图片宽度
+    catid       所属系统分类
+    ablumid     所属相册分类
+    private     是否公开图片        
