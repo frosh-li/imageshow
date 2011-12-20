@@ -1,9 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>image loader</title>
-  <script src='/nitrogen/jquery.js' type='text/javascript' charset='utf-8'></script>
+  <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript' charset='utf-8'></script>
   <script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
   <script type="text/javascript" src="/fancybox/jquery.easing-1.4.pack.js"></script>
   <script type="text/javascript" src="/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
@@ -58,31 +58,7 @@ html{
 </div>
 <div style="clear:both;"><button id="loadingmore">继续加载</button></div>
 <script type="text/javascript">
-var AppId = "69C99F5AC748FE455B97CF5F48EC51CB16DD10B4",
-    requestStr = "http://api.bing.net/json.aspx?";
-        
-            // Common request fields (required)
-            requestStr += "AppId=" + AppId;
-            requestStr += "&Query=帅哥";
-            requestStr += "&Sources=Image";
-            
-            // Common request fields (optional)
-            requestStr += "&Version=2.0";
-            requestStr += "&Market=en-us";
-            requestStr += "&Adult=Moderate";
 
-            // Image-specific request fields (optional)
-            requestStr += "&Image.Count=50";
-            
-
-            // JSON-specific request fields (optional)
-           requestStr += "&JsonType=callback";
-            requestStr += "&JsonCallback=jsonFlickrApi";  
-
-var site="http://markzhi.com/",
-    q = "美食",
-    api_call = requestStr;
-console.log(api_call);
 var loadedPics = [],t = null;
 var viewExistPics = [];
 var colwidth = 192 + 45 + 20; //固定列的宽度
@@ -159,20 +135,22 @@ function attachPicToMain(obj){
              });
             obj.shift();
         }
-    },600);
+    },0);
     
 }
 function getData(start){
-    start = start || 0;
     $.ajax({
-        url:api_call+"&Image.Offset="+start,
-        dataType:"jsonp",
-        success:function(){
-            currentOffset += 50;
+        url:"/index",
+        dataType:"json",
+        type:"GET",
+        success:function(data){
+           
+            jsonFlickrApi(data);
+            
         }
     });
 }
-var pictures = [];getData
+var pictures = [];
 function pushData(photoids){
 
     if(photoids.length < 1)
@@ -182,7 +160,6 @@ function pushData(photoids){
         dataType:"json",
         url:requestStr,
         success:function(d){
-            console.log(d);
             var size = d.sizes.size;
             if(size){
             for(var i = 0 ; i < size.length ; i++){
@@ -202,20 +179,17 @@ function pushData(photoids){
     });
 }
 function jsonFlickrApi(obj){
-    console.log(obj);
-    var photos = obj.SearchResponse.Image.Results;
-
+    var photos = obj.results;
     for(var i = 0 ; i<photos.length ; i++){
-       
-            pictures.push({"width_l":parseInt(photos[i]['Width']),"width":parseInt(photos[i]['Thumbnail']['Width']),"source":photos[i]['Thumbnail']['Url'],"title":photos[i]['Title'],"source_l":photos[i]['MediaUrl']});
+            pictures.push({"width_l":500,"width":200,"source":photos[i]['value']['src'],"title":photos[i]['value']['title'],"source_l":photos[i]['value']['src']});
     }
     attachPicToMain(pictures);
     //pushData(photos);
 }
 var currentOffset = 0 ;
 
-getData(currentOffset);
-$("#loadingmore").click(function(){getData(currentOffset,"")});
+getData();
+$("#loadingmore").click(function(){getData()});
 </script>
 </body>
 </html>

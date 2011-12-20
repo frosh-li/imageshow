@@ -3,33 +3,15 @@
 -compile(export_all).
 -include_lib("nitrogen/include/wf.hrl").
 
-main() -> #template { file="./site/templates/bare.html" }.
-
-title() -> "Welcome to Nitrogen".
-
-body() ->
-    #container_12 { body=[
-        #grid_8 { alpha=true, prefix=2, suffix=2, omega=true, body=inner_body() }
-    ]}.
-
-inner_body() -> 
-    [
-        #h1 { text="Welcome to Nitrogen" },
-        #p{},
-        "
-        If you can see this page, then your Nitrogen server is up and
-        running. Click the button below to test postbacks.
-        ",
-        #p{}, 	
-        #button { id=button, text="Click me!", postback=click },
-        #p{},
-        "
-        Run <b>./bin/dev help</b> to see some useful developer commands.
-        "
-    ].
+main() ->
+    wf:content_type("application/json"),
+	Server = couchbeam:server_connection("localhost", 5984, "", []),
+	{ok, Db} = couchbeam:open_db(Server, "image_cache", []),
+	{ok,Data} = couchbeam_view:fetch(Db,{"image","all_images"}),
+	JsonData = mochijson2:encode(Data),
+	"{\"results\":"++JsonData++"}".
+	%io:format("~p",[mochijson2:encode(Data)]).
+	%mochijson2:encode(Data).
+	%%insertToDb(Src,Title).
 	
-event(click) ->
-    wf:replace(button, #panel { 
-        body="You clicked the button!", 
-        actions=#effect { effect=highlight }
-    }).
+

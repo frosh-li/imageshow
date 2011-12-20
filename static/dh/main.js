@@ -54,8 +54,16 @@
 					 	 cTitle = cImg.getAttribute("title"),
 					 	 cSrc = cImg.getAttribute("src"),
 					 	 size = cImg.width + "*" + cImg.height;
-						 rTitle = cAlt!="" && cAlt != null?cAlt:(cTitle!="" && cTitle != null?cTitle:pageTitle);
+						 rTitle = cAlt!="" && cAlt != null?cAlt:(cTitle!="" && cTitle != null?cTitle:"无标题");
+						 
+						 var newImage = new Image();
+						 newImage.src = cSrc;
+						 cSrc = newImage.src;
+						 delete newImage;
+						 
 						 var cElement = document.createElement("div");
+						 
+						 
 						 //dh.setFloatStyle(cElement,"left");
 						 cElement.style.width = "85px";
 						 cElement.style.color="white";
@@ -85,31 +93,33 @@
 				if(obj.length == 0){
 					return;
 				}
-				
-				var c = obj[0],param = [];
-				var host = window.location.origin;
-				//if(c.src.indexOf(host) != 0){
-				//	c.src = escape(host + "/" + c.src);
-				//}
-				//c.title = escape(c.title);
-				for(var key in c){
-					param.push(key+"="+c[key]);
+				for(var i = 0 ; i < obj.length ; i++){
+				    var c = obj[i],param = [];
+				    var host = window.location.origin;
+				    //if(c.src.indexOf(host) != 0){
+				    //	c.src = escape(host + "/" + c.src);
+				    //}
+				    //c.title = escape(c.title);
+				    for(var key in c){
+					    param.push(key+"="+c[key]);
+				    }
+				    param.push("index="+i+"&callback=done?v="+new Date().getTime());
+				    if(document.getElementById("a_b_c_d_e_image_search_"+i)){
+					    document.getElementById("a_b_c_d_e_image_search").src = "http://bmifrosh.vicp.net:8000/storeimagecache?"+param.join("&");
+				    }else{
+					    var script = document.createElement("script");
+					    script.id = "a_b_c_d_e_image_search_"+i;
+					    script.src="http://bmifrosh.vicp.net:8000/storeimagecache?"+param.join("&");
+					    document.body.appendChild(script);
+				    }
 				}
-				param.push("callback=done");
-				if(document.getElementById("a_b_c_d_e_image_search")){
-					document.getElementById("a_b_c_d_e_image_search").src = "http://127.0.0.1:8000/storeimagecache?"+param.join("&");
-				}else{
-					var script = document.createElement("script");
-					script.id = "a_b_c_d_e_image_search";
-					script.src="http://127.0.0.1:8000/storeimagecache?"+param.join("&");
-					document.body.appendChild(script);
-				}
+				alert("uploaded");
 			}
             };
     var o = new dh();
 	 o.init();
 })();
-function done(data){
-	//document.getElementById("a_b_c_d_e_image_search").remove();
-	alert("saved");
+function done(i){
+	document.getElementById("a_b_c_d_e_image_search_"+i).remove();
+	//alert("saved");
 }
