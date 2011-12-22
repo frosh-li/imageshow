@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" class=" js rgba borderimage borderradius boxshadow textshadow opacity cssanimations cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>登录碟花网</title>
+  <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript' charset='utf-8'></script>
+  <script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+  <script type="text/javascript" src="/fancybox/jquery.easing-1.4.pack.js"></script>
+  <script type="text/javascript" src="/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/login.css" />
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+</head>
+<body>
+<div id="page">
+    <div id="login">
+        <a href="/">
+            <h1 id="login_logo">
+            </h1>
+        </a>
+        <div class="login_bar">
+        </div>
+        <form class="Form FancyForm AuthForm" method="post" action="/login/"
+        id="auth_form">
+            <ul>
+                <li>
+                    <div class="input ">
+                        <input type="text" value="" name="email" id="id_email">
+                        <label>
+                            邮箱地址
+                        </label>
+                        <span class="fff">
+                        </span>
+                        <div class="msgr left-arrow" style="" id="email_msgr">
+                            <span class="txt">
+                            </span>
+                            <span class="arrow">
+                                ◣
+                            </span>
+                            <span class="arrow-mask">
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="input">
+                        <input type="password" name="password" id="id_password">
+                        <label>
+                            密码
+                        </label>
+                        <span class="fff">
+                        </span>
+                        <div class="msgr left-arrow" id="password_msgr">
+                            <span class="txt">
+                            </span>
+                            <span class="arrow">
+                                ◣
+                            </span>
+                            <span class="arrow-mask">
+                            </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="non_inputs">
+                <a class="btn btn18 wbtn" onclick="return false;" href="#" id="login_btn">
+                    <strong>
+                        登录
+                    </strong>
+                    <span>
+                    </span>
+                </a>
+                <a class="less" onclick="return false;" href="#" id="reset_password">
+                    忘记了密码？
+                </a>
+                <a class="less" onclick="return false;" href="#" id="back_to_login">
+                    哦，又想起来了!
+                </a>
+                <p>
+                    <a class="less" href="/landing/" id="invite_me">
+                        还没有碟花网帐号？获取邀请
+                    </a>
+                </p>
+            </div>
+        </form>
+        <div class="success" style="display: none;" id="reset_msg">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+(function(){
+    /*
+        隐藏label
+    */
+    function hideLabel(obj){
+        var target = $(obj);
+        if(target.val() != ""){
+            $("label",target.parent()).hide();
+        }else{
+            $("label",target.parent()).show();
+        }
+    }
+    
+    
+    $(document).ready(function(){
+        var targets = $("#id_email,#id_password");
+        $.each(targets,function(i,ele){
+            ele = $(this);
+            hideLabel(ele);
+        })
+    });
+    /*
+        输入框focus的时候直接取消提示消息
+        输入框内容发生改变的时候 隐藏底部的文字 用户名和密码框
+    */
+    $("#id_email,#id_password").keyup(function(){
+        var target = $(this);
+         hideLabel(target);
+    }).focus(function(){
+        var target = $(this);
+        toggleMsg(target,$(".msgr",target.parent())[0],0);
+    });
+    
+    
+    
+    /**
+        点击登录的时候出现对应的提示信息
+    */
+    $("#login_btn").click(function(e){
+        // 第一步检查email地址
+        if($("#id_email").val() == ""){
+            toggleMsg("#id_email","#email_msgr",1,"请输入您的邮箱地址");
+            return;
+        }else{
+            toggleMsg("#id_email","#email_msgr",0);
+        }
+        if($("#id_email").val().match(/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/gi) == null){
+            toggleMsg("#id_email","#email_msgr",1,"邮箱格式不正确");
+            return;
+        }else{
+            toggleMsg("#id_email","#email_msgr",0);
+        }
+        // 检查password
+        if($("#id_password").val() == ""){
+            toggleMsg("#id_password","#password_msgr",1,"请输入您的密码");
+            return;
+        }else{
+            toggleMsg("#id_password","#password_msgr",0);
+        }
+        alert("填写正确");
+        $("auth_form").submit();
+        e.preventDefault();
+    })
+    /*
+        错误信息提示显示与消失
+    */
+    function toggleMsg(obj,msgr,show_hide,msg){
+        if(show_hide){
+            $(".txt",$(obj).parent()).html(msg);
+            $(msgr).show();
+        }else{
+            $(".txt",$(obj).parent()).html("");
+            $(msgr).hide();
+        }
+    }
+}());
+</script>
+</body>
+</html>
+    
+  
