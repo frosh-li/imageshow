@@ -1,0 +1,21 @@
+{
+   "_id": "_design/user",
+   "_rev": "1-14ca778030f24bbcd9fb0aa6c333df3d",
+   "language": "javascript",
+   "views": {
+       "all_user": {
+           "map": "function(doc) {\n  if(doc.table == \"user\")\n  emit(doc._id, doc);\n}"
+       }
+   }
+}
+
+
+{
+   "_id": "805adfddd5ee89d222de9d1b30000b87",
+   "_rev": "3-12b493931736bb52a513e6f5a2fd8b35",
+   "email": "junguoliang@163.com",
+   "password": "123456",
+   "role": "0",
+   "nick": "轻言放弃",
+   "table": "user"
+}
