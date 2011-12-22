@@ -12,22 +12,22 @@
 
 <style>
 html{
-     background:url("/images/imagesearch/paper.jpg") repeat scroll 0 0 #F7F5F5;
+     background:url("/images/paper.jpg") repeat scroll 0 0 #F7F5F5;
 }
 .col{
     float:left;
     width:237px;
+    margin:10px auto 0;
 }
 .ele{
     background-color: #FFFFFF;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     font-size: 11px;
     padding: 15px 15px 0;
-    
-    margin-left:10px;
     width: 192px;
-    margin-top:10px;
+    margin:10px auto 20px auto;
     display:none;
+    text-indent:17px;
 }
 .ele img{
     max-width:192px;
@@ -46,22 +46,44 @@ html{
     background-color:#F2F0F0;
     margin:0 -15px;
     padding:10px 5px;
-    color:#AD9C9C;
+    color:#333;
+    line-height:17px;
 }
 #main{
     width:100%;
+    margin:0px auto;
+}
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+.clearfix {
+	display: inline-block;
+}
+ 
+html[xmlns] .clearfix {
+	display: block;
+}
+ 
+* html .clearfix {
+	height: 1%;
 }
 </style>
 </head>
 <body>
 <div id="main" class="clearfix">
 </div>
-<div style="clear:both;"><button id="loadingmore">继续加载</button></div>
+<div style="clear:both;"><button id="loadingmore">努力加载中....</button></div>
 <script type="text/javascript">
 
 var loadedPics = [],t = null;
 var viewExistPics = [];
-var colwidth = 192 + 45 + 20; //固定列的宽度
+var colwidth = 237; //固定列的宽度
 var initWidth = document.body.clientWidth;
 var colnum = Math.floor(document.body.clientWidth / colwidth);
 //document.body.clientWidth
@@ -70,6 +92,7 @@ window.onload = function(){
     for(var i = 0 ; i < colnum ; i++){
         $("<div class='col'></div>").appendTo($("#main"));
     }
+    $("#main").css("width",colnum*colwidth+10 +"px");
     
 }
 
@@ -90,6 +113,7 @@ window.onresize = function(){
         for(var i = 0 ; i < colnum ; i++){
             $("<div class='col'></div>").appendTo($("#main"));
         }
+        $("#main").css("width",colnum*colwidth +"px");
         var tmp = viewExistPics.slice(0);
         attachPicToMain(tmp);
         initWidth = delayWidth;
@@ -135,61 +159,49 @@ function attachPicToMain(obj){
              });
             obj.shift();
         }
-    },0);
+    },100);
     
 }
+var inloading = false,
+	nomore = false;
 function getData(start){
-    $.ajax({
-        url:"/index",
-        dataType:"json",
-        type:"GET",
-        success:function(data){
-           
-            jsonFlickrApi(data);
-            
-        }
-    });
+    if(!inloading && !nomore){
+             inloading = true;
+	    $.ajax({
+		url:"/index?start="+start,
+		dataType:"json",
+		type:"GET",
+		success:function(data){
+		    jsonFlickrApi(data);
+		      currentOffset+=30;
+		      inloading = false;
+		}
+	    });
+    }
 }
 var pictures = [];
-function pushData(photoids){
-
-    if(photoids.length < 1)
-        return;
-    $.ajax({
-        method:"get",
-        dataType:"json",
-        url:requestStr,
-        success:function(d){
-            var size = d.sizes.size;
-            if(size){
-            for(var i = 0 ; i < size.length ; i++){
-                if(size[i].width > 400){
-                    pictures.push({"width":size[i]['width'],"source":size[i]['source'],"title":photoids[0]['title']});
-                    insertImageToDocument({"width":size[i]['width'],"source":size[i]['source'],"title":photoids[0]['title']});
-                    photoids.shift();
-                    break;
-                }
-            }
-            }
-            if(photoids.length > 0){
-                pushData(photoids.slice(0));
-            }
-            
-        }
-    });
-}
 function jsonFlickrApi(obj){
     var photos = obj.results;
-    for(var i = 0 ; i<photos.length ; i++){
-            pictures.push({"width_l":500,"width":200,"source":photos[i]['value']['src'],"title":photos[i]['value']['title'],"source_l":photos[i]['value']['src']});
+    if(photos.length == 0){
+    	$("#loadingmore").html("没有更多了");
+    	nomore = true;
+    	return;
     }
-    attachPicToMain(pictures);
+    for(var i = 0 ; i<photos.length ; i++){
+            pictures.push({"width_l":500,"width":200,"source":"/dhnetimage/"+photos[i]['key']+"_s"+photos[i]['value']['ext'],"title":photos[i]['value']['title'],"source_l":"/dhnetimage/"+photos[i]['key']+photos[i]['value']['ext']});
+    }
+    viewExistPics = pictures.slice(0);
+    attachPicToMain(pictures.slice(0));
     //pushData(photos);
 }
 var currentOffset = 0 ;
 
-getData();
-$("#loadingmore").click(function(){getData()});
+getData(currentOffset);
+window.onscroll = function(){
+	if(document.body.offsetHeight - document.documentElement.clientHeight -document.body.scrollTop < 100 && inloading == false){
+		getData(currentOffset);
+	}
+}
 </script>
 </body>
 </html>
