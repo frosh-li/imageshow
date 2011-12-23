@@ -60,6 +60,7 @@ member(_Key, _List, true)->
 member(_Key, [], Re)->
 	Re;
 member(Key, [H|T], Ret) ->
+	io:format("~p~n",[H]),
 	{[_Id,{_Key,Url},_]}=H,
 	Re = binary_to_list(Url) =:= Key,
 	member(Key, T, Re).

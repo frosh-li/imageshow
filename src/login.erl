@@ -9,18 +9,33 @@ main()->
     Server = couchbeam:server_connection("localhost", 5984, "", []),
 	{ok, Db} = couchbeam:open_db(Server, "image_cache", []),
 	{ok,Mylist}=couchbeam_view:fetch(Db,{"user","all_user"}),
-	io:format("~p~n",Mylist),
-    M = check_login(Email,Password,Mylist),
+    New = {Email,Password},
+    io:format("user and password ~p~n",[New]),
+    if New == {undefined,undefined} ->
+    	#template { file="./site/templates/login.html",bindings=[{'Ecode',"0"}] };
+    	true ->
+    		M = check_login(Email,Password,Mylist),
+    		case M of
+	    	 "true" ->
+	       	wf:session("email", Email),
+	       	wf:redirect("/baiduimage");
+		  True -> 
+			#template { file="./site/templates/login.html",bindings=[{'Ecode',"1"}] }
+		end
+    end.
     
-    if M == "true" ->
-        "登录成功";
-       M == "1" -> "密码错误";
-       M == "2" -> "username and password is empty";
-	  true -> 
-	        #template { file="./site/templates/login.html" }
-	end.
     
     
+    
+errorCode(T) ->
+	case T of
+	"1" -> Out = "用户名密码错误";
+	"0" -> Out = "";
+	"3"->Out = "用户名密码正确";
+	Other ->Out =  ""
+	end,
+	Out.
+	
 check_login(Email,Password,[])-> "";
 
 check_login(Email,Password,[H|T]) ->
@@ -35,8 +50,8 @@ check_login_2(Email,Password,CEmail,CPassword) ->
     List_Password = binary_to_list(CPassword),
     Old = {binary_to_list(CEmail),binary_to_list(CPassword)},
     Empty = {"",""},
-    if New == Old -> "true";
-       New == Empty -> "2";
-        true -> "0"
+    case New of Old -> "true";
+        Empty -> "0";
+        True -> "1"
     end.
 

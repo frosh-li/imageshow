@@ -33,6 +33,7 @@
                         </span>
                         <div class="msgr left-arrow" style="" id="email_msgr">
                             <span class="txt">
+                            	[[[login:errorCode(Ecode)]]]
                             </span>
                             <span class="arrow">
                                 ◣
@@ -107,7 +108,11 @@
         $.each(targets,function(i,ele){
             ele = $(this);
             hideLabel(ele);
-        })
+        });
+        var errmsg = $.trim($("#email_msgr .txt")[0].innerHTML);
+        if(errmsg != ""){
+        	$("#email_msgr").show();
+        }
     });
     /*
         输入框focus的时候直接取消提示消息
@@ -147,8 +152,8 @@
         }else{
             toggleMsg("#id_password","#password_msgr",0);
         }
-        alert("填写正确");
-        $("auth_form").submit();
+        //alert("填写正确");
+        $("#auth_form").submit();
         e.preventDefault();
     })
     /*

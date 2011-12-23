@@ -3,6 +3,7 @@ body {
 }
 .msgr {
     -moz-transition: all 0.15s ease-in-out 0s;
+    -webkit-transition: all 0.15s ease-in-out 0s;
     background-color: #D5373A;
     border-radius: 5px 5px 5px 5px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
@@ -19,6 +20,8 @@ body {
 .msgr .arrow {
     -moz-transform: rotate(135deg);
     -moz-transition: all 0.15s ease-in-out 0s;
+    -webkit-transform: rotate(135deg);
+    -webkit-transition: all 0.15s ease-in-out 0s;
     color: #D5373A;
     left: 15px;
     opacity: 0;
@@ -35,6 +38,7 @@ body {
 }
 .msgr .arrow-mask {
     -moz-transition: all 0.15s ease-in-out 0s;
+    -webkit-transition: all 0.15s ease-in-out 0s;
     background-color: #D5373A;
     display: block;
     height: 5px;
@@ -46,6 +50,7 @@ body {
 }
 .msgr.left-arrow .arrow {
     -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
     left: -8px;
     top: 7px;
     opacity:1;
@@ -147,14 +152,14 @@ form.AuthForm {
     width: 260px;
 }
 form.AuthForm input[type="text"] {
-    min-width: 260px !important;
+    max-width: 260px !important;
 }
 form.AuthForm li {
     border: 0 none !important;
 }
 .non_inputs {
     position: relative;
-    width: 258px;
+    /*width: 258px;*/
 }
 .non_inputs p {
     margin-top: 20px;
