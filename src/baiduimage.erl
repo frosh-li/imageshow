@@ -9,6 +9,6 @@ main()->
 userinfo(Session) ->
 	case Session of
 		'undefined' -> Out = "not login<a href='/login'>登录</a>";
-		Other -> Out = "your email is "++Session
+		Other -> Out = "your email is "++Session++" <a href='/logout'>退出登录</a>"
 	end,
 	Out.
