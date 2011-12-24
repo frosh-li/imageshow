@@ -61,7 +61,13 @@
 					 	 cSrc = cImg.getAttribute("src"),
 					 	 size = cImg.width + "*" + cImg.height;
 						 rTitle = cAlt!="" && cAlt != null?cAlt:(cTitle!="" && cTitle != null?cTitle:pageTitle);
-						 
+						 var space = rTitle.split(" "),
+						      _split = rTitle.split("_");
+						 if(_split.length > 0){
+						 	rTitle = _split[0];
+						 }else if(space.length > 0){
+						 	rTitle = space[0]
+						 }
 						 var newImage = new Image();
 						 newImage.src = cSrc;
 						 cSrc = newImage.src;
@@ -77,7 +83,7 @@
 						 cElement.style.margin = "10px 0 10px 20px";
 						 cElement.style.lineHeight = "18px";
 						 cElement.style.position = "relative";
-						 cElement.innerHTML = "<img src='"+cSrc+"' style='width: 100%;box-shadow: 0 0  10px white;' /><span style='display:block;'>"+rTitle+"</span><em>size:"+size+"</em><a href=\"#\" style=\"position: absolute;background: transparent url('http://bmifrosh.vicp.net:8000/fancybox/fancybox.png') -40px 0px;display: block;width: 27px;height: 25px;top: -15px;right: -15px;\"></a>";
+						 cElement.innerHTML = "<img src='"+cSrc+"' style='width: 100%;box-shadow: 0 0  10px white;' /><span style='display:block;'>"+rTitle+"</span><em>size:"+size+"</em><a href=\"#\" style=\"position: absolute;background: transparent url('http://bmifrosh.vicp.net:8000/fancybox/fancybox.png') -40px 0px;display: block;width: 27px;height: 25px;top: -15px;right: -15px;\"></a><i style='position: absolute;width: 40px;height: 40px;top: 30%;left: 45%;background-color: green;text-align: center;font-size: 40px;font-weight: 700;line-height: 40px;font-style: normal;display:none;'></i>";
 						 htmlCode.push(cElement);
 						 cElement.onclick = function(e){
 						 	var evt = window.event || e;
@@ -193,14 +199,24 @@
 	 o.init();
 	 }
 })();
-function _dh_upload_done(i,src){
+/*
+code == 1 上传成功
+code == 2 上传失败
+code == 3 数据库中已经存在
+*/
+function _dh_upload_done(i,src,code){
 	var cscript = document.getElementById("a_b_c_d_e_image_search_"+i);
 	cscript.parentNode.removeChild(cscript);
 	var allimages = document.getElementById("_obj_dh_picked_images_list").getElementsByTagName("img");
 	
 	for(var i = 0 ; i < allimages.length ; i++){
 		if(allimages[i].src == src){
-			allimages[i].parentNode.parentNode.removeChild(allimages[i].parentNode);
+			//allimages[i].parentNode.parentNode.removeChild(allimages[i].parentNode);
+			var noticeElement = allimages[i].parentNode.getElementsByTagName("i")[0];
+			noticeElement.innerHTML = code == 1?"Y":"N";
+			noticeElement.style.backgroundColor = code == 1?"green":"red";
+			noticeElement.style.display = "block";
+			/*
 			if(allimages.length == 0){
 				setTimeout(function(){
 				var mainContain = document.getElementById("dh_pick_img");
@@ -214,6 +230,7 @@ function _dh_upload_done(i,src){
 				document.getElementById("_obj_dh_pick_btn_").style.display = "inline-block";
 				},1500);
 			}
+			*/
 		}
 	}
 	//alert("saved");

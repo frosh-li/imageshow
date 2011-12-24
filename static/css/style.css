@@ -4,10 +4,9 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 /***** STYLE *****/
 
 body { 
-    font-family: "Lucida Grande", "Segoe UI", Tahoma, Helvetica, Arial, sans-serif; 
-    font-size: 16px;
-    line-height: 32px;
-	background-color:#F7F5F5;
+    font-family: "helvetica neue",arial,sans-serif;
+    color:#444;
+    font-size: 13px;
 }
 #main{
 	width:1020px;
@@ -34,4 +33,32 @@ body {
 	color: #AD9C9C;
 	padding: 10px 0px;
 	background-color: #F2F0F0;
+}
+#loadingpanel{
+
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: rgba(34, 25, 25, 0.14);
+    border-style: double;
+    border-width: 3px 0 0;
+    display: block;
+    font-weight: 700;
+    margin-bottom: 15px;
+    padding: 15px 0;
+    text-align: center;
+    border-style:double;
+    font-weight:700px;
+    color:#444;
+}
+#loadingmore{
+    font-size:1.6em;
+    display:none;
+    width:100%;
+}
+#header{
+    width:99%;
+    margin:0px auto;
 }

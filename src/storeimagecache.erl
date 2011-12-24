@@ -16,37 +16,43 @@ main() ->
 	{ok,Mylist}=couchbeam_view:fetch(Db,{"image","all_src"}),
 	M = member(Src,Mylist),
 	if M == true ->
-		io:format("not save pic ~n"),
-	   "_dh_upload_done(\""++Index++"\",'"++Src++"')";
+	   "_dh_upload_done(\""++Index++"\",'"++Src++"','3')";
 	   true -> 
-	        [HT|AT] = couchbeam:get_uuid(Server),
-            Doc = {[{<<"_id">>,HT},{<<"src">>, binary:list_to_bin(Src)},{<<"title">>,binary:list_to_bin(Title)},{<<"ext">>,binary:list_to_bin(Ext)}]},
-            {ok, {[_,_,_,_,{_,Rev}]}} = couchbeam:save_doc(Db, Doc),
-              
-
 		Reqs = ibrowse:send_req(Src,[],get),
-                io:format("ok ~p~n",[Src]),
 		case Reqs of
 		    {ok,_,Header,Pic} -> 
 		    	Extx = readExt(Header),
-			file:write_file("site/static/dhnetimage/"++binary_to_list(HT)++Extx,Pic),
+		    case Extx of
+		        ".jpg" -> TT = save_to_db_thumb(Extx,Pic,Src,Db,Title,Server);
+		        ".png" -> TT = save_to_db_thumb(Extx,Pic,Src,Db,Title,Server);
+		        ".gif" -> TT = save_to_db_thumb(Extx,Pic,Src,Db,Title,Server);
+		        Other -> TT = "2"
+		    end;
+		    {error, Reason} -> TT = "2"
+		end,
+            "_dh_upload_done(\""++Index++"\",'"++Src++"',"++TT++")"
+	end.
+    
+
+save_to_db_thumb(Extx,Pic,Src,Db,Title,Server) ->
+            [HT|AT] = couchbeam:get_uuid(Server),
+            Doc = {[{<<"_id">>,HT},{<<"src">>, binary:list_to_bin(Src)},{<<"title">>,binary:list_to_bin(Title)},{<<"ext">>,<<"noinput">>},{<<"ablumid">>,<<"bcd3ff57b616356c318960d652005adc">>},{<<"table">>,<<"images">>}]},
+            {ok, {[_,_,_,_,_,_,{_,Rev}]}} = couchbeam:save_doc(Db, Doc),
+file:write_file("site/static/dhnetimage/"++binary_to_list(HT)++Extx,Pic),
 			os:cmd("convert site/static/dhnetimage/"++binary_to_list(HT)++Extx++" -thumbnail 192 site/static/dhnetimage/"++binary_to_list(HT)++"_s"++Extx),
 		        %%% update ext area
-		        couchbeam:save_doc(Db, {[{<<"_id">>,HT},{<<"src">>, binary:list_to_bin(Src)},{<<"title">>,binary:list_to_bin(Title)},{<<"ext">>,binary:list_to_bin(Extx)},{<<"_rev">>,Rev}]}),
-		        io:format("~p~n",[Extx]),
-			Out = "save to "++binary_to_list(HT)++Extx;
-		    {error, Reason} -> Out = "can't get the picture , Reason is "++Reason
-		end,
-            "_dh_upload_done(\""++Index++"\",'"++Src++"')"
-	end.
+		        couchbeam:save_doc(Db, {[{<<"_id">>,HT},{<<"src">>, binary:list_to_bin(Src)},{<<"title">>,binary:list_to_bin(Title)},{<<"ext">>,binary:list_to_bin(Extx)},{<<"ablumid">>,<<"bcd3ff57b616356c318960d652005adc">>},{<<"table">>,<<"images">>},{<<"_rev">>,Rev}]}),
+		        "1".    
     
 rOne(H)->
 	case H of
-	{"Content-Type","image/jpeg"} -> ".jpg";
-	{"Content-Type","image/gif"} -> ".gif";
-	{"Content-Type","image/png"} -> ".png";
-	Other -> ""
-	end.
+	{"Content-Type","image/jpeg"} -> X=".jpg";
+	{"Content-Type","image/gif"} -> X=".gif";
+	{"Content-Type","image/png"} -> X=".png";
+	Other -> X=""
+	end,
+	io:format("~p~n",[X]),
+	X.
 
 readExt([]) -> "";
 readExt([H|T]) ->

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>碟花网</title>
+  <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript' charset='utf-8'></script>
+  <script type="text/javascript" src="/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+  <script type="text/javascript" src="/fancybox/jquery.easing-1.4.pack.js"></script>
+  <script type="text/javascript" src="/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+
+<style>
+<body>
+<div class="wfx profile">
+    <form class="Form StaticForm" name="profile_edit" method="post" action="/settings/" id="profile_edit"><h3>帐号设置</h3><ul><li><label for="id_email">邮箱地址</label><div class="Right"><input type="text" maxlength="75" value="junguoliang@163.com" name="user[email]" id="id_email"><span class="help_text">可用于直接登录花瓣</span></div></li><li style="display:;" id="email_field"><label>密码</label><div class="Right"><a class="btn btn18 wbtn" href="/password/change/"><strong> 修改密码</strong><span></span></a></div></li><li><label for="id_username">昵称</label><div class="Right"><input type="text" value="轻言放弃" name="user[username]" id="id_username"></div></li><li class="urlname"><label for="id_urlname">个性网址</label><div class="Right"><input type="text" value="frosh" name="user[urlname]" id="id_urlname"><span class="help_text urlname_available">http://huaban.com/个性网址</span></div></li><li><input type="hidden" name="user[avatar]" id="avatar_holder"><label for="id_avatar">头像</label><div class="Right"><div class="current_avatar_wrapper fl"><img class="load" style="display:none;" src="/img/load2.gif"><img class="fl" src="http://img.hb.aicdn.com/cb82b7e9f55b252598a2be8ddc3aa9791b32fc9e25a6-JuF9TV_fw192" id="current_avatar"></div><div class="NoInput fl" style="padding-left: 12px;position:relative;"><p><a class="upload_avatar btn btn18 wbtn" onclick="return false;" href="#" id="avatar_upload_button"><strong> 上传头像</strong><span></span></a><div style="position: absolute; opacity: 0.01; overflow: hidden;"><iframe frameborder="no" src="javascript:'&lt;html&gt;&lt;/html&gt;'" border="0" name="IFrame_gwj0njfg" id="IFrame_gwj0njfg" style="display: none;"></iframe><input type="file" name="file" size="1" style="position: absolute; top: 0px; left: 0px; border: 0px none;"></div></p><p><a class="refresh_avatar btn btn18 wbtn" onclick="return false;" href="#" data="weibo"><strong> 从微博同步头像</strong><span></span></a></p></div></div></li><li class="NoInput"><label>新浪微博</label><div class="Right NoInput"><p><a target="_blank" href="http://weibo.com/frosh"><span>weibo.com/frosh</span></a><a class="btn wbtn" style="margin-left: 12px;" href="/oauth/weibo/binding/" id="weibo_connect"><strong> 重新绑定新浪微博</strong><span></span></a><input type="hidden" value="1" name="weibo_connected"><label for="hide_weibo"><input type="checkbox" value="1" name="status[hide_weibo]" id="hide_weibo">不在主页显示我的新浪微博</label></p></div></li><li class="NoInput"><label>豆瓣</label><div class="Right NoInput"><p><a class="btn btn18 wbtn" href="/oauth/douban/binding/" id="douban_connect"><strong> 绑定豆瓣</strong><span></span></a></p></div></li><li><label for="id_about">关于自己</label><div class="Right"><textarea cols="54" rows="3" name="profile[about]" id="id_about">一句话记录碰到的技术问题</textarea></div></li><li><label for="id_location">所在城市</label><div class="Right"><input type="text" value="北京 昌平区" name="profile[location]" id="id_location"></div></li><li><label for="id_url">个人主页</label><div class="Right"><input type="text" value="http://blog.sina.com.cn/pcclear" name="profile[url]" id="id_url"></div></li></ul><div class="Submit"><a class="btn btn24 rbtn" onclick="return false;" href="#" id="submit_btn"><strong> 保存设置</strong><span></span></a></div></form>
+</div>
+</body>
+</html>

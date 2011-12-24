@@ -16,8 +16,8 @@ main()->
     	true ->
     		M = check_login(Email,Password,Mylist),
     		case M of
-	    	 "true" ->
-	       	wf:session("email", Email),
+	    	{"true",CId,CNick,CSpace,CAvatar} ->
+	       	wf:session("userinfo",{CId,Email,CNick,CSpace,CAvatar}),
 	       	wf:redirect("/baiduimage");
 		  True -> 
 			#template { file="./site/templates/login.html",bindings=[{'Ecode',"1"}] }
@@ -39,9 +39,9 @@ errorCode(T) ->
 check_login(Email,Password,[])-> "";
 
 check_login(Email,Password,[H|T]) ->
-    {[_,_,{_,{[_,_,{_,CEmail},{_,CPassword},_,_,_]}}]} = H,
+    {[_,_,{_,{[{_,CId},_,{_,CEmail},{_,CPassword},_,{_,CNick},{_,CSpace},{_,CAvatar},_]}}]} = H,
     M = check_login_2(Email,Password,CEmail,CPassword),
-    if M == "true" -> "true";
+    if M == "true" -> {"true",CId,CNick,CSpace,CAvatar};
         true -> check_login(Email,Password,T)
     end.
 check_login_2(Email,Password,CEmail,CPassword) ->

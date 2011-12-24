@@ -1148,6 +1148,9 @@ a.remove_activity_rec:hover, a.remove_activity_invite:hover {
 }
 #menu_bar {
     float: right;
+    position:absolute;
+    right:1px;
+    top:0px;
 }
 #menu {
     background-color: #FAF7F7;
@@ -1177,7 +1180,7 @@ a.remove_activity_rec:hover, a.remove_activity_invite:hover {
     position: relative;
 }
 #menu ul {
-    left: -1px;
+    left: -27px;
     top: 20px;
     z-index: 105;
 }
@@ -1955,7 +1958,9 @@ a.remove_activity_rec:hover, a.remove_activity_invite:hover {
 }
 .Form input[type="text"], .Form input[type="password"], .Form textarea {
     -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     -moz-transition: all 0.08s ease-in-out 0s;
+    -webkit-transition: all 0.08s ease-in-out 0s;
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #A4A2A2;
     border-radius: 6px 6px 6px 6px;
