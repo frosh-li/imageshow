@@ -31,6 +31,7 @@ html{
     margin:10px auto 20px auto;
     display:block;
     text-indent:17px;
+    border:1px solid #ccc;
 }
 .vis{
     opacity:0;
@@ -99,6 +100,7 @@ window.onload = function(){
         $("<div class='col'></div>").appendTo($("#main"));
     }
     $("#main").css("width",colnum*colwidth+10 +"px");
+    setTimeout(function(){getData(currentOffset);},50);
 };
 window.onresize = function(){
     return;
@@ -124,9 +126,9 @@ window.onresize = function(){
     },500);
 }
 function attachPicToMain(obj){
+	var arrelem = $("#main .col");
+	var container = $(arrelem[0]);
 	for(var i = 0 ; i<obj.length ;i++){
-		var arrelem = $("#main .col");
-			var container = $(arrelem[0]);
 			//console.log(arrelem);
 			$.each(arrelem,function(index,celem){
 			//console.log(celem);
@@ -137,8 +139,10 @@ function attachPicToMain(obj){
 			var m = obj[i];
 			var elem = $("<div class='ele vis'><a href='"+m.source_l+"' class='grouped_elements'><img src='"+m.source+"' width='"+m.width+"' /\></a><div class='title'>"+m.title+"</div></div>");
 			elem.appendTo(container);
-			$("a.grouped_elements",elem).fancybox();
+			
 	}
+	var visEle = $(".vis");
+	$("a.grouped_elements",visEle).fancybox();
 	obj.length = 0;
 	    $('.vis').animate({
 			opacity: 1
@@ -169,7 +173,7 @@ var pictures = [];
 function jsonFlickrApi(obj){
     var photos = obj.results;
     	 
-    if(photos.length == 0){
+    if(photos.length == 0){jsonFlickrApi
     	$("#loadingmore").html("<img src='/images/end.png' /\>");
     	$("#loadingpanel").show();
     	nomore = true;
@@ -184,7 +188,7 @@ function jsonFlickrApi(obj){
 }
 var currentOffset = 0 ;
 
-setTimeout(function(){getData(currentOffset);},50);
+
 
 window.onscroll = function(){
 	if(document.body.offsetHeight - document.body.clientHeight -document.body.scrollTop < 100 && inloading == false){

@@ -3,25 +3,30 @@
 -include_lib("nitrogen/include/wf.hrl").
 main()->
 	Session = wf:session("userinfo"),
+	if Session == 'undefined' -> wf:redirect("/baiduimage");
+            true ->	
 	Id = wf:q("sid"),
 	Server = couchbeam:server_connection("localhost", 5984, "", []),
 	{ok, Db} = couchbeam:open_db(Server, "image_cache", []),
-	{ok,M} = couchbeam:open_doc(Db, list_to_binary(Id)),
-	{[_,_,{_,Email},{_,_},{_,Role},{_,Nickname},_,_,_]}  = M,
-	%
-	%arg1 为nickname
-	%	arg2为id	
-	% arg4为template 名称
-	%
-	Tp = "selecte_cat.html",
-	#template { file="./site/templates/space.html",bindings = [{'Arg1',Nickname},{'Arg2',list_to_binary(Id)},{'Arg3',Email},{'Arg4',Tp}]}.
+	case couchbeam:open_doc(Db, list_to_binary(Id)) of
+		{ok,M} ->
+			{[_,_,{_,Email},{_,_},{_,Role},{_,Nickname},_,_,_]}  = M,
+			%
+			%arg1 为nickname
+			%	arg2为id	
+			% arg4为template 名称
+			%
+			Tp = "selecte_cat.html",
+			#template { file="./site/templates/space.html",bindings = [{'Arg1',Nickname},{'Arg2',list_to_binary(Id)},{'Arg3',Email},{'Arg4',Tp}]};
+		Oter -> wf:redirect("/baiduimage")
+	 end
+	end.
 	
 %%获取所有画版
-list_table()->
+list_table(Userid)->
 	Server = couchbeam:server_connection("localhost", 5984, "", []),
 	{ok, Db} = couchbeam:open_db(Server, "image_cache", []),
-	{ok,M} = couchbeam_view:fetch(Db, {"userablum","list_all"}),
-	io:format("~p~n",[M]),
+	{ok,M} = couchbeam_view:fetch(Db, {"userablum","list_all_userid"},[{key,Userid}]),
 	Out = list_all(M),
 	Out.
 
@@ -42,6 +47,35 @@ list_all([H|T]) ->
 get_ablum_list([]) -> "";
 get_ablum_list([H|T]) ->
       get_c_ablum_image(H)++get_ablum_list(T).
+
+%% 获取ablum数据
+get_ablum_count(Id) ->
+	Server = couchbeam:server_connection("localhost", 5984, "", []),
+	{ok, Db} = couchbeam:open_db(Server, "image_cache", []),
+	{ok,Lists}= couchbeam_view:fetch(Db, {"userablum","list_all_userid"},[{key,Id}]),
+	Array = array:from_list(Lists),
+	Counts = array:size(Array),
+	integer_to_list(Counts).
+%% 获取某个用户所有的图片数量
+get_image_count(Userid) ->
+	Server = couchbeam:server_connection("localhost", 5984, "", []),
+	{ok, Db} = couchbeam:open_db(Server, "image_cache", []),
+	{ok,Lists} = couchbeam_view:fetch(Db, {"userablum","list_all_userid"},[{key,Userid}]),
+	Counts = get_image_counts_list(Lists),
+	integer_to_list(Counts).
+	
+get_image_counts_list([]) -> 0;
+get_image_counts_list([H|T]) ->
+	Server = couchbeam:server_connection("localhost", 5984, "", []),
+	{ok, Db} = couchbeam:open_db(Server, "image_cache", []),
+	{[_,_,{_,{[{_,Id},_,_,_,_,_]}}]} = H,
+	io:format("~p~n",[H]),
+	io:format("~p~n",[Id]),
+	{ok,Countlist} = couchbeam_view:fetch(Db, {"image","ablum_images"},[{key,Id}]),
+	Array = array:from_list(Countlist),
+	Counts = array:size(Array),
+	io:format("~p~n",[Counts]),
+	Counts + get_image_counts_list(T).
      	
 %% 获取各种信息 
 get_info(Key)->
@@ -54,11 +88,9 @@ get_cat_list(Tpl)->
 	{ok,M} = couchbeam_view:fetch(Db, {"cat","all_cat"}),
 	
 	Templates = list_cate(M,Tpl),
-	io:format("~p~n",[Templates]),
 	Templates.
 	
 read_tpl(H,Tpl) -> 
-	io:format("~p~n",[H]),
 	{[{_,Id},_,{_,Catname}]} = H,
 	"<li class=\"BoardCategory\" data=\""++binary_to_list(Id)++"\">"++
 	"<span>"++binary_to_list(Catname)++"</span>"++

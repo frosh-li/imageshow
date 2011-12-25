@@ -22,3 +22,9 @@ check_login()->
 		{CId,Email,CNick,CSpace,CAvatar} -> Out = {CId,Email,CNick,CSpace,CAvatar}
 	end,
 	Out.
+
+redirect_session_login() ->
+	Session = wf:session("userinfo"),
+	if Session == 'undefined' -> wf:redirect("/login"),wf:flush();
+	    true -> ""
+	end.

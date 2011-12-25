@@ -10,6 +10,7 @@ main() ->
 	Index = wf:q("index"),
 	Callback = wf:q("callback"),
 	Ext = wf:q("ext"),
+	Catid = wf:q("catid"),
 	Server = couchbeam:server_connection("localhost", 5984, "", []),
 	{ok, Db} = couchbeam:open_db(Server, "image_cache", []),
 	
@@ -23,9 +24,9 @@ main() ->
 		    {ok,_,Header,Pic} -> 
 		    	Extx = readExt(Header),
 		    case Extx of
-		        ".jpg" -> TT = save_to_db_thumb(Extx,Pic,Src,Db,Title,Server);
-		        ".png" -> TT = save_to_db_thumb(Extx,Pic,Src,Db,Title,Server);
-		        ".gif" -> TT = save_to_db_thumb(Extx,Pic,Src,Db,Title,Server);
+		        ".jpg" -> TT = save_to_db_thumb(Extx,Pic,Src,Db,Title,Server,Catid);
+		        ".png" -> TT = save_to_db_thumb(Extx,Pic,Src,Db,Title,Server,Catid);
+		        ".gif" -> TT = save_to_db_thumb(Extx,Pic,Src,Db,Title,Server,Catid);
 		        Other -> TT = "2"
 		    end;
 		    {error, Reason} -> TT = "2"
@@ -34,14 +35,14 @@ main() ->
 	end.
     
 
-save_to_db_thumb(Extx,Pic,Src,Db,Title,Server) ->
+save_to_db_thumb(Extx,Pic,Src,Db,Title,Server,Catid) ->
             [HT|AT] = couchbeam:get_uuid(Server),
-            Doc = {[{<<"_id">>,HT},{<<"src">>, binary:list_to_bin(Src)},{<<"title">>,binary:list_to_bin(Title)},{<<"ext">>,<<"noinput">>},{<<"ablumid">>,<<"bcd3ff57b616356c318960d652005adc">>},{<<"table">>,<<"images">>}]},
+            Doc = {[{<<"_id">>,HT},{<<"src">>, binary:list_to_bin(Src)},{<<"title">>,binary:list_to_bin(Title)},{<<"ext">>,<<"noinput">>},{<<"ablumid">>,binary:list_to_bin(Catid)},{<<"table">>,<<"images">>}]},
             {ok, {[_,_,_,_,_,_,{_,Rev}]}} = couchbeam:save_doc(Db, Doc),
 file:write_file("site/static/dhnetimage/"++binary_to_list(HT)++Extx,Pic),
 			os:cmd("convert site/static/dhnetimage/"++binary_to_list(HT)++Extx++" -thumbnail 192 site/static/dhnetimage/"++binary_to_list(HT)++"_s"++Extx),
 		        %%% update ext area
-		        couchbeam:save_doc(Db, {[{<<"_id">>,HT},{<<"src">>, binary:list_to_bin(Src)},{<<"title">>,binary:list_to_bin(Title)},{<<"ext">>,binary:list_to_bin(Extx)},{<<"ablumid">>,<<"bcd3ff57b616356c318960d652005adc">>},{<<"table">>,<<"images">>},{<<"_rev">>,Rev}]}),
+		        couchbeam:save_doc(Db, {[{<<"_id">>,HT},{<<"src">>, binary:list_to_bin(Src)},{<<"title">>,binary:list_to_bin(Title)},{<<"ext">>,binary:list_to_bin(Extx)},{<<"ablumid">>,binary:list_to_bin(Catid)},{<<"table">>,<<"images">>},{<<"_rev">>,Rev}]}),
 		        "1".    
     
 rOne(H)->
