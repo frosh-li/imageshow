@@ -10,7 +10,9 @@
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
-
+  
+<link rel=”icon” href=”/favicon.ico” mce_href=”/favicon.ico” type=”image/x-icon”>
+<link rel=”shortcut icon” href=”/favicon.ico” mce_href=”/favicon.ico” type=”image/x-icon”>
 <body>
 <div id="doc" class="profile">
             [[[commonheader:get_header()]]]
@@ -35,6 +37,17 @@
                     </div>
                 </div>
             <![endif]-->
+          <div id="nav_bar">
+          <div id="BoardTitle" class="wrapper">
+          	<h1><a href="/viewboards?id=[[[viewboards:get_info(Arg2)]]]">[[[viewboards:get_ablum_name(Arg2)]]]</a><span class="stats">(<span class="count">[[[viewboards:get_ablum_images(Arg2)]]]</span> 个采集)</span></h1>
+          	<div id="BoardButton">
+          		<a  href="/space?sid=[[[viewboards:get_info(Arg4)]]]" class="btn btn13 wbtn">
+          			<strong>所有画板</strong>
+          			<span></span>
+          		</a>
+          	</div>
+          </div>
+          </div>
             <div id="wrapper" class="wrapper bl">
                 <div id="ProfileSidebar">
                     <h1>
@@ -74,45 +87,17 @@
                             <span>
                             </span>
                         </a>
-                    </div>
-                </div>
-                <div id="ctx_bar">
-                    <p class="bar-links">
-                        <span class="selected">
-                            [[[space:get_ablum_count(Arg2)]]]  画板
-                        </span>
-                        &nbsp;·&nbsp;
-                        <a href="/frosh/pins/">
-                            [[[space:get_image_count(Arg2)]]] 采集
-                        </a>
-                        &nbsp;·&nbsp;
-                        <a href="/frosh/likes/">
-                            0 喜欢
-                        </a>
-                    </p>
-                    <div id="BoardButton">
-                        <a id="boards_sort_cancel" style="visibility:hidden;" href="#" onclick="return false;"
-                        class="btn wbtn">
-                            <strong>
-                                取消
-                            </strong>
-                            <span>
-                            </span>
-                        </a>
-                        <a id="boards_sort" href="#" onclick="return false;" class="btn wbtn">
-                            <strong>
-                                画板排序
-                            </strong>
-                            <span>
-                            </span>
-                        </a>
+                        <h3>其它画板</h3>
+                        <div id="BoardBoards">
+                        	[[[viewboards:list_table(Arg4)]]]
+                        </div>
+                        
                     </div>
                 </div>
                 <div id="waterfall">
-                    [[[space:get_ablum_images(Arg2)]]]
+                   
                 </div>
-                <div class="clear">
-                </div>
+                <div class="clear" id="loadingpanel"><div id="loadingmore">点击加载</div></div>
             </div>
         </div>
         <a id="elevator" href="#" onclick="return false;" class="Indicator off btn wbtn">
@@ -176,7 +161,7 @@
             <div class="Submit">
                 <a href="#"  class="btn btn18 wbtn">
                     <strong>
-                        创建画板
+                        创建画板[[[space:get_info(Arg1)]]]
                     </strong>
                     <span>
                     </span>
@@ -224,6 +209,162 @@ $(".Submit a").click(function(e){// POST 数据
 		alert("错误");
 	}
 });
+var loadedPics = [],t = null;
+var viewExistPics = [];
+var colwidth = 237; //固定列的宽度
+var initWidth = document.body.clientWidth;
+var colnum = Math.floor((document.body.clientWidth-237) / colwidth);
+//document.body.clientWidth
+window.onload = function(){
+ for(var i = 0 ; i < colnum ; i++){
+        $("<div class='col'></div>").appendTo($("#waterfall"));
+    }
+    $("#waterfall").css("width",colnum*colwidth+10 +"px");
+    setTimeout(function(){getData(currentOffset);},50);
+};
+window.onresize = function(){
+    return;
+    var currentWidth = document.body.clientWidth;
+    if(currentWidth == initWidth){
+        return;
+    }
+    setTimeout(function(){
+        delayWidth = document.body.clientWidth;
+        if(delayWidth != currentWidth){
+            return;
+        }
+        clearInterval(t);
+        $("#waterfall").html("");
+        colnum = Math.floor(document.body.clientWidth / colwidth);
+        for(var i = 0 ; i < colnum ; i++){
+            $("<div class='col'></div>").appendTo($("#waterfall"));
+        }
+        $("#waterfall").css("width",colnum*colwidth +"px");
+        var tmp = viewExistPics.slice(0);
+        attachPicToMain(tmp);
+        initWidth = delayWidth;
+    },500);
+}
+function attachPicToMain(obj){
+	var arrelem = $("#waterfall .col");
+	var container = $(arrelem[0]);
+	for(var i = 0 ; i<obj.length ;i++){
+			//console.log(arrelem);
+			$.each(arrelem,function(index,celem){
+			//console.log(celem);
+			if($(celem).innerHeight() < container.innerHeight()){
+				container = $(celem);
+			}
+			});
+			var m = obj[i];
+			//<div class="actions" style="display: none; "><a data-num="3" userid="13534" to="45966" class="button forward-btn png">转发</a><a to="45966" class="button comment-btn png">评论</a><a to="45966" class="button edit-btn png">编辑</a></div>
+			var elem = $("<div class='ele vis'><div class='actions' data-id="+m.unitid+"><a class='button edit'>编辑</a><a class='button delete'>删除</a></div><a href='"+m.source_l+"' class='grouped_elements'><img src='"+m.source+"' height='"+m.height+"' /\></a><div class='title'>"+m.title+"</div></div>");
+			elem.appendTo(container);
+			
+			$(".delete",elem).click(function(){
+				console.log($(this).parent());
+				var me = $(this);
+				var image_id =  $(this).parent().attr("data-id");
+				$.ajax({
+					url:"/deleteimage?imageid="+image_id,
+					dataType:"json",
+					type:"GET",
+					success:function(data){
+						//data = eval('"'+data+'"');
+						if(data.state){
+							
+							me.parents(".ele").fadeOut('slow', function() {
+							    	me.parents(".ele").remove();
+							  });
+						}else{
+							alert("删除失败");
+						}
+					}
+				});
+			});
+			elem.hover(function(){
+				$(".actions",$(this)).show();
+			},function(){
+				$(".actions",$(this)).hide();
+			});
+	}
+	var visEle = $(".vis");
+	$("a.grouped_elements",visEle).fancybox();
+	obj.length = 0;
+   	$('.vis').animate({
+		opacity: 1
+	  }, 1000, function() {
+	    $(this).removeClass("vis");
+	  });
+	
+}
+var inloading = false,
+	nomore = false,
+	startkey="";
+function getData(start){
+    if(!inloading && !nomore){
+             inloading = true;
+	    $.ajax({
+		url:"/ajaxboards?boardid=[[[space:get_info(Arg2)]]]&start="+start+(start == 0?"":"&startkey="+startkey),
+		dataType:"json",
+		type:"GET",
+		success:function(data){
+		    jsonFlickrApi(data);
+		      currentOffset+=30;
+		      inloading = false;
+		}
+	    });
+    }
+}
+var pictures = [];
+function jsonFlickrApi(obj){
+    var photos = obj.results;
+    	 
+    if(photos.length == 0){jsonFlickrApi
+    	$("#loadingmore").html("<img src='/images/end.png' /\>");
+    	$("#loadingpanel").show();
+    	nomore = true;
+    	return;
+    }
+    for(var i = 0 ; i<photos.length ; i++){
+            pictures.push({"width_l":500,"width":200,"source":"/dhnetimage/"+photos[i]['id']+"_s"+photos[i]['value']['ext'],"title":photos[i]['value']['title'],"source_l":"/dhnetimage/"+photos[i]['id']+photos[i]['value']['ext'],unitid:photos[i]['id'],height:photos[i]['value']['height']});
+    }
+    startkey = photos[photos.length-1]['key'];
+    viewExistPics = pictures.slice(0);
+    attachPicToMain(pictures);
+}
+var currentOffset = 0 ;
+
+
+
+window.onscroll = function(){
+	if(document.body.offsetHeight - document.body.clientHeight -document.body.scrollTop < 100 && inloading == false){
+		getData(currentOffset);
+	}
+	if($(document.documentElement).scrollTop() > 0 || $(document.body).scrollTop() > 0){	
+		$("#elevator").removeClass("off");
+		$("#elevator").addClass("on");
+		$("#elevator").die().live("click",function(){$("body,html").animate({scrollTop:0},500)});
+	}else{
+		$("#elevator").removeClass("on");
+		$("#elevator").addClass("off");
+	}
+}
+var loadingInter = setInterval(function(){
+	if(nomore){
+		clearInterval(loadingInter);
+	}
+	var D = document;
+	if(D.body.offsetHeight > D.documentElement.clientHeight){
+		$("#loadingmore").show();
+	}
+},50);
+$("#loadingmore").click(function(){
+    getData(currentOffset);
+});
+
+
+
 </script>
 </body>
 </html>        

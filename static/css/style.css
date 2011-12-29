@@ -62,3 +62,151 @@ body {
     width:99%;
     margin:0px auto;
 }
+html{
+     background:url("/images/paper.jpg") repeat scroll 0 0 #F7F5F5;
+}
+.col{
+    float:left;
+    width:237px;
+    margin:10px auto 0;
+}
+.ele{
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    -webkit-box-shadow:0 1px 3px rgba(34, 25, 25, 0.4);
+    -moz-box-shadow:0 1px 3px rgba(34, 25, 25, 0.4);
+    font-size: 11px;
+    padding: 15px 15px 0;
+    width: 192px;
+    margin:10px auto 20px auto;
+    display:block;
+    text-indent:17px;
+    border:1px solid #ccc;
+    position:relative;
+}
+.ele .actions{
+	position:absolute;
+	top:5px;
+	z-index:10;
+	width:100%;
+	display:none;
+}
+.ele a.button{
+	display:inline-block;
+	background-image:url(/images/link.png);
+	background-repeat:no-repeat;
+	height: 22px;
+	line-height: 14px;
+	padding-top: 8px;
+	width:68px;
+	text-align:center;
+	cursor:pointer;
+	text-decoration:none;
+	position:absolute;
+}
+.ele a.delete{
+	background-position:0 0;
+	right:30px;
+}
+.ele a.delete:hover{
+	background-position:-72px 0;
+}
+.ele a.delete:active{
+	background-position:-144px 1px;
+}
+.ele a.edit{
+	background-position:0 -186px;
+	left:4px;
+}
+.ele a.edit:hover{
+	background-position:-72px -186px;
+}
+.ele a.edit:active{
+	background-position:-144px -187px;
+}
+.vis{
+    opacity:0;
+}
+.ele img{
+    max-width:192px;
+    display:block;
+    margin:0 auto;
+}
+.ele a{
+    outline:medium none;
+    text-decoration:none;
+}
+.ele a:hover img{
+    opacity:0.9;
+}
+.ele .title{
+    background-color:#F2F0F0;
+    margin:0 -15px;
+    padding:10px 5px;
+    color:#333;
+    line-height:17px;
+}
+#main{
+    width:100%;
+    margin:0px auto;
+}
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+.clearfix {
+	display: inline-block;
+}
+ 
+html[xmlns] .clearfix {
+	display: block;
+}
+ 
+* html .clearfix {
+	height: 1%;
+}
+#bookmark_tool{
+    float:left;
+    margin-top:7px;
+}
+#bookmark_tool a{
+    background: url("http://a.imimg.cn/r4774/images/help/button.gif") no-repeat scroll left top transparent;
+    cursor: move;
+    display: inline-block;
+    height: 37px;
+    overflow: hidden;
+    text-indent: -99999px;
+    vertical-align: middle;
+    width: 130px;
+}
+#bookmark_tool a:hover{
+    background: url("http://a.imimg.cn/r4774/images/help/button.gif") no-repeat scroll left bottom transparent;
+}
+.show{
+    border-top:3px solid #000000
+}
+.show li{
+    background-color: #F2F0F0;
+    border: 1px solid #BBBBBB;
+    border-radius: 10px;
+    box-shadow: 0 1px #FFFFFF inset, 0 1px 1px rgba(34, 25, 25, 0.1);
+    color: #8C7E7E;
+    display: inline-block;
+    font-size: 14px;
+    margin: 0 2px 8px 0;
+    padding: 4px 0px;
+    cursor:pointer;
+    float:left;
+}
+.show li.selected,.show li:hover{
+    background-color:white;
+    color:#333;
+}
+.show li span{
+    float:left;
+}

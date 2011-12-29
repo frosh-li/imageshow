@@ -5,7 +5,7 @@
     <div id="menu_bar">
         <ul class="menu" id="menu">
             <li>
-                <a class="nav no-icon" href="/">首页</a>
+                <a class="nav no-icon" href="/baiduimage">首页</a>
             </li>
             <li>
                 <a class="nav" href="/about/">关于<span></span></a>
@@ -18,6 +18,11 @@
             </li><!-- event2012-->
             [[[commonheader:userinfo()]]]
         </ul>
+        
+        <div id="bookmark_tool">
+            <a title="碟花抓取" href='javascript:(function(){var head = document.getElementsByTagName("head")[0];var allscript = head.getElementsByTagName("script");var b = false;for(var i = 0 ; i < allscript.length ; i++){if(allscript[i].getAttribute("id")=="dh_pick_img_script"){b=true;_dh_get_image_object.startToPick(_dh_get_image_object);break;}}if(b){return;}var script = document.createElement("script");script.id="dh_pick_img_script";script.setAttribute("charset",document.characterSet);script.setAttribute("src","http://bmifrosh.vicp.net/dh/main_book.js?v"+new Date().getTime());head.appendChild(script);})();'>碟花-抓取</a>
+            <span>拖拽我到收藏夹</span>
+        </div>
         <div id="search">
             <form class="text" action="/search/" method="get" id="search_form"><input type="text" class="default_value" value="" placeholder="搜索你喜欢的" autocomplete="off" name="q" size="27" id="query"><a class="lg" onclick="$('search_form').submit();return false;" href="#" id="search_lens"><img alt="搜索" src="/images/search.gif"></a>
             </form>

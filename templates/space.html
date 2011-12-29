@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
 
+<link rel=”icon” href=”/favicon.ico” mce_href=”/favicon.ico” type=”image/x-icon”>
+<link rel=”shortcut icon” href=”/favicon.ico” mce_href=”/favicon.ico” type=”image/x-icon”>
 <body>
 <div id="doc" class="profile">
             [[[commonheader:get_header()]]]
@@ -74,6 +76,13 @@
                             <span>
                             </span>
                         </a>
+                        <a href="/addcontain?sid=[[[space:get_info(Arg2)]]]" class="btn btn13 wbtn" id="addnewpanel">
+                            <strong>
+                                上传采集
+                            </strong>
+                            <span>
+                            </span>
+                        </a>
                     </div>
                 </div>
                 <div id="ctx_bar">
@@ -99,7 +108,7 @@
                             <span>
                             </span>
                         </a>
-                        <a id="boards_sort" href="#" onclick="return false;" class="btn wbtn">
+                        <a id="boards_sort" href="#" onclick="return false;" class="btn wbtn" style="display:none;">
                             <strong>
                                 画板排序
                             </strong>
@@ -124,7 +133,71 @@
             <span>
             </span>
         </a>
-        
+ <div id="EditBoard" style="display: none; " class="ModalContainer  destroy">
+    <div class="modal wide ">
+        <div class="header lg">
+            <a href="#" onclick="$('#EditBoard').hide();return false" class="close">
+                <strong>
+                    Close
+                </strong>
+                <span>
+                </span>
+            </a>
+            <h2>
+                编辑画板
+            </h2>
+        </div>
+        <form action="" class="Form StaticForm nm">
+            <ul>
+                <li class="nbt">
+                    <input id="id_board_title_edit" type="text" name="title" value="">
+                    <label>
+                        画板标题
+                    </label>
+                    <span class="fff">
+                    </span>
+                </li>
+                <li>
+                    <input id="id_category_edit" type="hidden" name="category" value="">
+                    <div class="BoardListOverlay">
+                    </div>
+                    <div class="BoardSelector BoardPicker CategoryPicker">
+                        <div class="current">
+                            <span class="CurrentBoard">
+                                选择分类
+                            </span>
+                            <span class="DownArrow">
+                            </span>
+                        </div>
+                        <div class="BoardList">
+                            <div class="BoardListBody">
+                                <ul>
+                                    [[[page:get_cat_list(4)]]]
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <label>
+                        画板分类
+                    </label>
+                </li>
+            </ul>
+            <div class="Submit">
+                <a href="#"  class="btn btn18 wbtn">
+                    <strong>
+                        保存
+                    </strong>
+                    <span>
+                    </span>
+                </a>
+                <div class="CreateBoardStatus msgr">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="overlay">
+    </div>
+</div>       
         
 <div id="CreateBoard" style="display: none; " class="ModalContainer  destroy">
     <div class="modal wide ">
@@ -194,6 +267,14 @@
 
         
 <script>  
+$(".FollowBoard").click(function(e){
+	var target = $(this),
+		title = $("h3",target.parents(".Board")).html();
+        $("#id_board_title_edit").val(title);
+	e.preventDefault();
+	$("#EditBoard").show();
+	
+});
 $("#addnewpanel").click(function(e){
 	var target = $(this);
 	e.preventDefault();
@@ -204,9 +285,15 @@ $(".CurrentBoard").click(function(e){
 });
 $(".BoardCategory").click(function(e){
 	console.log($(this));
-	$("#id_category").val($(this).attr("data"));
-	$(".CurrentBoard").html($(this).text());
+	if($("#CreateBoard")[0] == $(this).parents("#CreateBoard")[0]){
+		$("#id_category").val($(this).attr("data"));
+		
+	}else{
+		$("#id_category_edit").val($(this).attr("data"));
+	}
+	$(".CurrentBoard",$(this).parents(".CategoryPicker")).html($(this).text());
 	$(this).parents(".BoardList").hide();
+	
 });
 $(".Submit a").click(function(e){// POST 数据
 	var catid = $("#id_category").val(),

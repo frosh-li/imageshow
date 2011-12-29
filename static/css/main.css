@@ -1019,8 +1019,11 @@ a.remove_activity_rec:hover, a.remove_activity_invite:hover {
     text-shadow: 0 -1px rgba(34, 25, 25, 0.6);
 }
 .rbtn span {
-    background: -moz-linear-gradient(center top , #EB5367, #E04751 50%, #DE404A 50%, #D43638) repeat scroll 0 0 transparent;
-    border-color: #910101;
+        border-color: #910101;
+        background: -webkit-gradient(linear,0% 0,0% 100%,from( #EB5367),to( #D43638),color-stop(.5, #E04751),color-stop(.5, #DE404A));
+        background: -moz-linear-gradient(center top, #EB5367, #E04751 50%, #DE404A 50%, #D43638);
+        background: -o-linear-gradient(top left, #EB5367, #E04751 50%, #DE404A 50%, #D43638);
+        background: -webkit-gradient(linear,0% 0,0% 100%,from( #EB5367),to( #D43638),color-stop(.5, #E04751),color-stop(.5, #DE404A));
 }
 .rbtn:hover span {
     background: -moz-linear-gradient(center top , #EA5D6E, #E3535D 50%, #E04A54 50%, #D63E40) repeat scroll 0 0 transparent;
@@ -1597,7 +1600,7 @@ a.remove_activity_rec:hover, a.remove_activity_invite:hover {
     margin-top: 20px;
 }
 .profile #waterfall {
-    margin-left: 237px;
+    margin-left: 230px;
     margin-top: 15px;
 }
 .profile .Board {
@@ -1623,6 +1626,14 @@ a.remove_activity_rec:hover, a.remove_activity_invite:hover {
 #ProfileImage img {
     display: block;
     max-width: 100%;
+}
+#ProfileImage h3{
+	color: #999;
+font-size: 15px;
+font-weight: 400;
+margin: 15px 0 7px 0;
+clear: both;
+word-wrap: break-word;
 }
 #ProfileImage .btn {
     display: block;
@@ -2229,6 +2240,11 @@ a.remove_activity_rec:hover, a.remove_activity_invite:hover {
     position: absolute;
 }
 #CreateBoard .CategoryPicker {
+    float: right;
+    margin-right: 25px;
+    max-width: 337px;
+}
+#EditBoard .CategoryPicker {
     float: right;
     margin-right: 25px;
     max-width: 337px;

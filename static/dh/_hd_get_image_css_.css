@@ -1,0 +1,70 @@
+#dh_pick_img{
+    overflow-y:scroll;
+}
+#_obj_dh_save_btn_,#_obj_dh_max_btn_,#_obj_dh_cat_btn_{
+    background-image: url("http://a.imimg.cn/r4774/images/button/option_btn.gif");
+    background-repeat: no-repeat;
+    color: #333;
+    display: inline-block;
+    font-size: 14px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    vertical-align: middle;
+    width: 190px;
+    cursor:pointer;
+    margin-top:20px;
+    margin-left:10px;
+}
+#_obj_dh_save_btn_:hover,#_obj_dh_max_btn_:hover{
+    background-position:-206px 0;
+}
+#_obj_dh_cat_btn_{
+    position:relative;
+}
+#_obj_dh_cat_btn_ a{
+    display:block;
+    text-decoration:none;
+}
+#_obj_dh_cat_btn_ i{
+    position: absolute;
+    background: url("http://bmifrosh.vicp.net/images/downArrow.png") no-repeat center top;
+    cursor: pointer;
+    display: inline-block;
+    height: 9px;
+    overflow: hidden;
+    vertical-align: middle;
+    width: 14px;
+    right: 14px;
+    top: 14px;
+}
+#_dh_select_cat_ul_{
+color: #333;
+background-color: white;
+position: absolute;
+z-index: 30;
+display: block;
+width: 187px;
+border: 1px solid #AAA;
+top: 3px;
+border-radius: 3px;
+left: 1px;
+box-shadow: 0 0 17px #BBBBBB;
+}
+
+#_dh_select_cat_ul_ li{
+    border: 0 none !important;
+    color: #524D4D;
+    cursor: pointer;
+    display: block;
+    font-size: 18px;
+    line-height: 1.15em;
+    list-style: none outside none;
+    margin: 0;
+    padding: 5px 46px 5px 8px;
+    text-align:left;
+}
+#_dh_select_cat_ul_ li:hover{
+    background-color: #EBE8E8;
+    color: #221919;
+}

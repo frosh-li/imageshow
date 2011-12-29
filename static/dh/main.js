@@ -38,7 +38,7 @@
 					+'</div>';
 			// TODO page element
 			var me = this;
-			document.body.appendChild(newElement);
+			document.body.insertBefore(newElement,document.body.firstChild);
 			this.mainContainer = newElement;
 			this.pickBtn = document.getElementById("_obj_dh_pick_btn_");
 			document.getElementById("_obj_dh_max_btn_").onclick = function() {
@@ -65,7 +65,7 @@
 		},
 		startToPick : function(me) {
 			me.check_login();
-			var tpl = "<img src='${src}' style='width:80px;' /><span>${title}</span><em>size:${size}</em>";
+			var tpl = "<img src='${src}' style='width:80px;height:80px;' /><span>${title}</span><em>size:${size}</em>";
 			var allimages = document.getElementsByTagName("img"), pageTitle = document
 					.getElementsByTagName("title")[0].innerHTML, htmlCode = [], aData = [];
 			var targetElement = document
@@ -93,8 +93,9 @@
 				cSrc = newImage.src;
 				delete newImage;
 				var ext = cSrc.substring(cSrc.length - 4, cSrc.length);
+				//cSrc = escape(cSrc);
 				var cElement = document.createElement("div");
-
+				
 				dh.setFloatStyle(cElement, "left");
 				cElement.style.color = "white";
 				cElement.style.width = "200px";
@@ -104,7 +105,7 @@
 				cElement.style.position = "relative";
 				cElement.innerHTML = "<img src='"
 						+ cSrc
-						+ "' style='width: 100%;box-shadow: 0 0  10px white;' /><span style='display:block;'>"
+						+ "' style='width: 200px;height:200px;box-shadow: 0 0  10px white;' /><span style='display:block;'>"
 						+ rTitle
 						+ "</span><em>size:"
 						+ size
@@ -182,7 +183,7 @@
 			}
 			var catid= document.getElementById("_dh_ablum_id_").value;
 			if(catid == ""){
-				alert("请选择画版");
+				alert("\u8bf7\u9009\u62e9\u753b\u677f"); // 请选择画板
 				return;
 			}
 			for ( var i = 0; i < obj.length; i++) {
@@ -190,7 +191,11 @@
 				var host = window.location.origin;
 				c.title = encodeURI(c.title);
 				for ( var key in c) {
-					param.push(key + "=" + c[key]);
+					if(key == "src"){
+						param.push(key + "=" +  escape(c[key]));
+					}else{
+						param.push(key + "=" +  c[key]);
+					}
 				}
 				param.push("catid="+catid+"&index=" + i + "&callback=_dh_upload_done?v="
 						+ new Date().getTime());
@@ -224,11 +229,12 @@
 	 * 私有IP：A类 10.0.0.0-10.255.255.255 B类 172.16.0.0-172.31.255.255 C类
 	 * 192.168.0.0-192.168.255.255 当然，还有127这个网段是环回地址
 	 */
-	if (hname != "bmifrosh.vicp.net" && hname != "127.0.0.1") {
-		var o = new dh();
-		o.init();
-	}
+	
 })();
+if (hname != "bmifrosh.vicp.net" && hname != "127.0.0.1") {
+	var _dh_get_image_object = new dh();
+	dh_get_image_object.init();
+}
 function _diehua_jsonp(options){
 	/*
 	 * options 格式"{ablumid:'"++binary_to_list(Id)++"',catname:'"++binary_to_list(Catname)++"'}".
